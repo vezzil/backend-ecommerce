@@ -53,10 +53,19 @@ func Init() {
 		// Add other models here
 	)
 	if err != nil {
-		log.Printf("Warning: Failed to auto-migrate database: %v", err)
 	}
 	log.Println("dbmanager: connected and migrated")
 }
 
 // DB returns the initialized *gorm.DB.
-func DB() *gorm.DB { return db }
+func DB() *gorm.DB {
+	return db
+}
+
+// GetDB is an alias for DB() to maintain backward compatibility
+func GetDB() (*gorm.DB, error) {
+	if db == nil {
+		return nil, fmt.Errorf("database not initialized")
+	}
+	return db, nil
+}

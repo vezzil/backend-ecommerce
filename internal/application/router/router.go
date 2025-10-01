@@ -26,47 +26,46 @@ func Register(r *gin.Engine, db *gorm.DB) {
 	categoryController := controller.NewCategoryController(categoryService)
 	productController := controller.NewProductController(productService)
 	cartController := controller.NewCartController(cartService)
-	orderController := controller.NewOrderController(orderService)
 	paymentController := controller.NewPaymentController(paymentService)
 	productReviewController := controller.NewProductReviewController(productReviewService)
 
 	// API routes
 	api := r.Group("/api")
+
+	// Public routes (no authentication required)
 	{
-		// Auth routes (public)
+		// Health check
+		api.GET("/health", func(c *gin.Context) {
+			c.JSON(200, gin.H{"status": "ok"})
+		})
+
+		// Auth endpoints
 		authGroup := api.Group("/auth")
 		{
 			authGroup.POST("/register", authController.Register)
 			authGroup.POST("/login", authController.Login)
-			authGroup.GET("/me", auth.AuthMiddleware(), authController.GetMe)
 		}
 
-		// Protected routes (require authentication)
-		api.Use(auth.AuthMiddleware())
-		// User routes
-		userController.RegisterRoutes(api)
-
-		// Category routes
-		categoryController.RegisterRoutes(api)
-
-		// Product routes
-		productController.RegisterRoutes(api)
-
-		// Cart routes
-		cartController.RegisterRoutes(api)
-
-		// Order routes
-		orderController.RegisterRoutes(api)
-
-		// Payment routes
-		paymentController.RegisterRoutes(api)
-
-		// Product review routes
-		productReviewController.RegisterRoutes(api)
-
-		// Health check.
-		api.GET("/health", func(c *gin.Context) {
-			c.JSON(200, gin.H{"status": "ok"})
-		})
+		// Serve Swagger UI and docs
+		// api.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}
-}
+
+	// Protected API group (all routes under this group require authentication)
+	protectedAPI := api.Group("")
+	protectedAPI.Use(auth.AuthMiddleware())
+	{
+		// Auth protected routes
+		authProtected := protectedAPI.Group("/auth")
+		{
+			authProtected.GET("/me", authController.GetMe)
+		}
+
+		// Register all other routes under the protected group
+		userController.RegisterRoutes(protectedAPI)
+		categoryController.RegisterRoutes(protectedAPI)
+		productController.RegisterRoutes(protectedAPI)
+		cartController.RegisterRoutes(protectedAPI)
+		orderController.RegisterRoutes(protectedAPI)
+		paymentController.RegisterRoutes(protectedAPI)
+		productReviewController.RegisterRoutes(protectedAPI)
+	}
