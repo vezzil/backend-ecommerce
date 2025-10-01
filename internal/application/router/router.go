@@ -5,10 +5,12 @@ import (
 
 	"backend-ecommerce/internal/application/controller"
 	"backend-ecommerce/internal/application/service"
+	"backend-ecommerce/internal/auth"
+	"gorm.io/gorm"
 )
 
 // Register registers all HTTP routes on the given engine.
-func Register(r *gin.Engine) {
+func Register(r *gin.Engine, db *gorm.DB) {
 	// Initialize services
 	userService := service.NewUserService()
 	categoryService := service.NewCategoryService()
@@ -20,6 +22,7 @@ func Register(r *gin.Engine) {
 
 	// Initialize controllers
 	userController := controller.NewUserController(userService)
+	authController := controller.NewAuthController(db)
 	categoryController := controller.NewCategoryController(categoryService)
 	productController := controller.NewProductController(productService)
 	cartController := controller.NewCartController(cartService)
@@ -30,6 +33,16 @@ func Register(r *gin.Engine) {
 	// API routes
 	api := r.Group("/api")
 	{
+		// Auth routes (public)
+		authGroup := api.Group("/auth")
+		{
+			authGroup.POST("/register", authController.Register)
+			authGroup.POST("/login", authController.Login)
+			authGroup.GET("/me", auth.AuthMiddleware(), authController.GetMe)
+		}
+
+		// Protected routes (require authentication)
+		api.Use(auth.AuthMiddleware())
 		// User routes
 		userController.RegisterRoutes(api)
 

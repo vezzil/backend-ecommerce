@@ -26,6 +26,11 @@ type AppConfig struct {
 		Loc       string
 		Timeout   string
 	}
+	JWT struct {
+		Secret   string        `mapstructure:"secret"`
+		Issuer   string        `mapstructure:"issuer"`
+		ExpireIn time.Duration `mapstructure:"expire_in"`
+	} `mapstructure:"jwt"`
 	Stripe struct {
 		APIKey         string `mapstructure:"api_key"`
 		WebhookSecret  string `mapstructure:"webhook_secret"`
