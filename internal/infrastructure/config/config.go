@@ -26,6 +26,15 @@ type AppConfig struct {
 		Loc       string
 		Timeout   string
 	}
+	Stripe struct {
+		APIKey         string `mapstructure:"api_key"`
+		WebhookSecret  string `mapstructure:"webhook_secret"`
+		SuccessURL     string `mapstructure:"success_url"`
+		CancelURL      string `mapstructure:"cancel_url"`
+		DefaultCurrency string `mapstructure:"default_currency"`
+		TestMode       bool   `mapstructure:"test_mode"`
+		WebhookPath    string `mapstructure:"webhook_path"`
+	} `mapstructure:"stripe"`
 	Redis struct {
 		Host     string
 		Port     int
