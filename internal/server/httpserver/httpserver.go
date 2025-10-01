@@ -7,7 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"boilerplate-golang/internal/infrastructure/config"
+	"backend-ecommerce/internal/infrastructure/config"
 )
 
 // New creates a configured gin.Engine with recovery and CORS middlewares.

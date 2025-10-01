@@ -1,5 +1,5 @@
 [app]
-name = "boilerplate-golang"
+name = "backend-ecommerce
 port = 8080
 env = "development"
 
@@ -9,7 +9,7 @@ env = "development"
 # port = 3306
 # user = "root"
 # password = ""
-# name = "boilerplate"
+# name = "backend-ecommerce"
 # charset = "utf8mb4"
 # parse_time = true
 # loc = "Local"

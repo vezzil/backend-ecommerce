@@ -6,7 +6,7 @@ import (
 
 	"github.com/robfig/cron/v3"
 
-	"boilerplate-golang/internal/infrastructure/config"
+	"backend-ecommerce/internal/infrastructure/config"
 )
 
 var c *cron.Cron

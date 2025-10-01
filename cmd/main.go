@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
-	"boilerplate-golang/internal/infrastructure/config"
-	"boilerplate-golang/internal/infrastructure/dbmanager"
-	"boilerplate-golang/internal/infrastructure/cachemanager"
-	"boilerplate-golang/internal/infrastructure/cronmanager"
-	"boilerplate-golang/internal/server/httpserver"
-	"boilerplate-golang/internal/application/router"
+	"backend-ecommerce/internal/infrastructure/config"
+	"backend-ecommerce/internal/infrastructure/dbmanager"
+	"backend-ecommerce/internal/infrastructure/cachemanager"
+	"backend-ecommerce/internal/infrastructure/cronmanager"
+	"backend-ecommerce/internal/server/httpserver"
+	"backend-ecommerce/internal/application/router"
 )
 
 func main() {

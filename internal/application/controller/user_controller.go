@@ -6,10 +6,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"boilerplate-golang/internal/application/dto"
-	"boilerplate-golang/internal/application/entity"
-	"boilerplate-golang/internal/application/service"
-	"boilerplate-golang/pkg/response"
+	"backend-ecommerce/internal/application/dto"
+	"backend-ecommerce/internal/application/entity"
+	"backend-ecommerce/internal/application/service"
+	"backend-ecommerce/pkg/response"
 )
 
 // UserController handles user-related HTTP requests

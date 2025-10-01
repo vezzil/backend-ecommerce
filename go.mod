@@ -1,4 +1,4 @@
-module boilerplate-golang
+module backend-ecommerce
 
 go 1.24.1
 
