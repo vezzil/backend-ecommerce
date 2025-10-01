@@ -32,10 +32,8 @@ func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 		u.CreatedAt = now
 	}
 	u.UpdatedAt = now
-	// Set default values
-	if u.IsActive != false {
-		u.IsActive = true // Default to active
-	}
+	// Set default value for IsActive
+	u.IsActive = true // Default to active
 	return nil
 }
 
@@ -43,22 +41,4 @@ func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 func (u *User) BeforeUpdate(tx *gorm.DB) (err error) {
 	u.UpdatedAt = time.Now().UTC()
 	return nil
-}
-
-// Sanitize removes sensitive information from the user object
-func (u *User) Sanitize() {
-	u.Password = ""
-}
-
-// ToResponse converts User to UserResponse DTO
-func (u *User) ToResponse() map[string]interface{} {
-	return map[string]interface{}{
-		"id":         u.ID,
-		"username":   u.Username,
-		"email":      u.Email,
-		"full_name":  u.FullName,
-		"is_active":  u.IsActive,
-		"created_at": u.CreatedAt,
-		"updated_at": u.UpdatedAt,
-	}
 }
