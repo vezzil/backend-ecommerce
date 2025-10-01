@@ -73,27 +73,39 @@ func (ac *AuthController) Register(c *gin.Context) {
 		return
 	}
 
-	// Generate token
-	tokenResp, err := config.GenerateToken(user.ID)
+	// Generate token pair
+	tokenPair, err := config.GenerateTokenPair(user.ID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate tokens"})
 		return
 	}
 
-	// Return user info and token
+	// Set secure, HTTP-only cookie for refresh token
+	c.SetSameSite(http.SameSiteStrictMode)
+	c.SetCookie(
+		"refresh_token",
+		tokenPair.RefreshToken,
+		int((7 * 24 * time.Hour).Seconds()), // 7 days
+		"/api/auth/refresh",
+		"", // domain
+		true, // secure (set to true in production with HTTPS)
+		true, // httpOnly
+	)
+
+	// Return user info and access token in response body
 	c.JSON(http.StatusCreated, dto.AuthResponse{
 		UserID:    user.ID,
 		Email:     user.Email,
 		Username:  user.Username,
 		FullName:  user.FullName,
-		Token:     tokenResp.Token,
-		ExpiresAt: tokenResp.ExpiresAt.Format("2006-01-02T15:04:05Z"),
+		Token:     tokenPair.AccessToken,
+		ExpiresAt: tokenPair.ExpiresAt.Format(time.RFC3339),
 	})
 }
 
 // Login handles user login
 // @Summary User login
-// @Description Authenticate a user and return a JWT token
+// @Description Authenticate a user and return a JWT token pair
 // @Tags auth
 // @Accept json
 // @Produce json
@@ -128,27 +140,123 @@ func (ac *AuthController) Login(c *gin.Context) {
 		return
 	}
 
-	// Generate token
-	tokenResp, err := config.GenerateToken(user.ID)
+	// Generate token pair
+	tokenPair, err := config.GenerateTokenPair(user.ID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate tokens"})
 		return
 	}
+
+	// Set secure, HTTP-only cookie for refresh token
+	c.SetSameSite(http.SameSiteStrictMode)
+	c.SetCookie(
+		"refresh_token",
+		tokenPair.RefreshToken,
+		int((7 * 24 * time.Hour).Seconds()), // 7 days
+		"/api/auth/refresh",
+		"", // domain
+		true, // secure (set to true in production with HTTPS)
+		true, // httpOnly
+	)
 
 	// Update last login
 	now := time.Now()
 	user.LastLogin = &now
 	ac.db.Save(&user)
 
-	// Return user info and token
+	// Return user info and access token in response body
 	c.JSON(http.StatusOK, dto.AuthResponse{
 		UserID:    user.ID,
 		Email:     user.Email,
 		Username:  user.Username,
 		FullName:  user.FullName,
-		Token:     tokenResp.Token,
-		ExpiresAt: tokenResp.ExpiresAt.Format("2006-01-02T15:04:05Z"),
+		Token:     tokenPair.AccessToken,
+		ExpiresAt: tokenPair.ExpiresAt.Format(time.RFC3339),
 	})
+}
+
+// RefreshToken handles token refresh
+// @Summary Refresh access token
+// @Description Refresh an expired access token using a refresh token
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Success 200 {object} dto.AuthResponse
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Router /api/auth/refresh [post]
+func (ac *AuthController) RefreshToken(c *gin.Context) {
+	// Get refresh token from cookie
+	refreshToken, err := c.Cookie("refresh_token")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Refresh token is required"})
+		return
+	}
+
+	// Get user ID from context (set by AuthMiddleware)
+	userID, exists := c.Get("userID")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid or expired token"})
+		return
+	}
+
+	// Verify refresh token and get new token pair
+	tokenPair, err := config.VerifyRefreshToken(userID.(uint), refreshToken)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid refresh token"})
+		return
+	}
+
+	// Set new refresh token in cookie
+	c.SetSameSite(http.SameSiteStrictMode)
+	c.SetCookie(
+		"refresh_token",
+		tokenPair.RefreshToken,
+		int((7 * 24 * time.Hour).Seconds()),
+		"/api/auth/refresh",
+		"",
+		true,  // secure
+		true,  // httpOnly
+	)
+
+	// Return new access token
+	c.JSON(http.StatusOK, dto.AuthResponse{
+		Token:     tokenPair.AccessToken,
+		ExpiresAt: tokenPair.ExpiresAt.Format(time.RFC3339),
+	})
+}
+
+// Logout handles user logout
+// @Summary User logout
+// @Description Invalidate the current user's refresh token
+// @Tags auth
+// @Security Bearer
+// @Produce json
+// @Success 200 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Router /api/auth/logout [post]
+func (ac *AuthController) Logout(c *gin.Context) {
+	userID, exists := c.Get("userID")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Not authenticated"})
+		return
+	}
+
+	// Invalidate refresh token
+	config.InvalidateRefreshToken(userID.(uint))
+
+	// Clear refresh token cookie
+	c.SetCookie(
+		"refresh_token",
+		"",
+		-1, // Expire immediately
+		"/",
+		"",
+		true,
+		true,
+	)
+
+	c.JSON(http.StatusOK, gin.H{"message": "Successfully logged out"})
 }
 
 // GetMe returns the current user's profile
