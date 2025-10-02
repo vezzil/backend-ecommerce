@@ -1,12 +1,12 @@
 package auth
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt/v5"
-
+	"backend-ecommerce/internal/application/service"
 	"backend-ecommerce/internal/infrastructure/config"
 )
 
@@ -60,17 +60,27 @@ func GetUserIDFromContext(c *gin.Context) (uint, bool) {
 }
 
 // AdminMiddleware checks if the user is an admin
-func AdminMiddleware() gin.HandlerFunc {
+func AdminMiddleware(userService service.UserService) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		// Get user ID from context
 		userID, exists := GetUserIDFromContext(c)
 		if !exists {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 			return
 		}
 
-		// TODO: Implement admin check logic here
-		// For now, we'll just allow any authenticated user
-		// In a real app, you would check the user's role here
+		// Get user from database
+		user, err := userService.GetUserByID(fmt.Sprint(userID))
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Error fetching user"})
+			return
+		}
+
+		// Check if user is admin
+		if !user.IsAdmin {
+			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"error": "Access denied. Admin privileges required"})
+			return
+		}
 
 		c.Next()
 	}

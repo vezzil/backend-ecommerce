@@ -14,6 +14,7 @@ type User struct {
 	Password  string         `gorm:"size:255;not null" json:"-"` // - means don't include in JSON
 	FullName  string         `gorm:"size:100" json:"full_name,omitempty"`
 	IsActive  bool           `gorm:"default:true" json:"is_active"`
+	IsAdmin   bool           `gorm:"default:false" json:"is_admin"` // Admin flag
 	LastLogin *time.Time     `json:"last_login,omitempty"`
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
