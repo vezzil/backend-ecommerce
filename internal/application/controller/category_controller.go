@@ -25,10 +25,10 @@ func (cc *CategoryController) CreateCategory(c *gin.Context) {
 
 // UpdateCategory handles PUT /api/categories/:id
 func (cc *CategoryController) UpdateCategory(c *gin.Context) {
-	
+
 }
 
 // DeleteCategory handles DELETE /api/categories/:id
 func (cc *CategoryController) DeleteCategory(c *gin.Context) {
-	
+
 }

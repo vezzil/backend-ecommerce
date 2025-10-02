@@ -1,16 +1,15 @@
 package controller
 
 import (
-	"backend-ecommerce/internal/application/service"
 	"backend-ecommerce/internal/application/dto"
+	"backend-ecommerce/internal/application/service"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 // CartController handles cart-related HTTP requests
-type CartController struct{
-
+type CartController struct {
 }
 
 // GetOrCreateCart handles GET /api/carts
@@ -24,14 +23,14 @@ type CartController struct{
 // @Failure 500 {object} dto.ResponseDto "Internal server error"
 // @Router /api/carts [get]
 func (cc *CartController) GetOrCreateCart(c *gin.Context) {
-    userID := c.GetString("user_id")
-    if userID == "" {
-        c.JSON(http.StatusUnauthorized, dto.Fail("User not authenticated"))
-        return
-    }
+	userID := c.GetString("user_id")
+	if userID == "" {
+		c.JSON(http.StatusUnauthorized, dto.Fail("User not authenticated"))
+		return
+	}
 
-    response := service.ICartService.GetOrCreateCart(&userID, "")
-    c.JSON(http.StatusOK, response)
+	response := service.ICartService.GetOrCreateCart(&userID, "")
+	c.JSON(http.StatusOK, response)
 }
 
 // AddCartItem handles POST /api/carts/items

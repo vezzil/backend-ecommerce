@@ -25,5 +25,5 @@ func (pc *PaymentController) GetPaymentsByOrder(c *gin.Context) {
 
 // RefundPayment handles POST /api/payments/:id/refund
 func (pc *PaymentController) RefundPayment(c *gin.Context) {
-	
+
 }

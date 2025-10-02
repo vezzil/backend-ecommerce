@@ -19,16 +19,16 @@ func (uc *UserController) GetUser(c *gin.Context) {
 }
 
 // CreateUser handles POST /api/users
-func (uc *UserController) CreateUser(c *gin.Context){
-	
+func (uc *UserController) CreateUser(c *gin.Context) {
+
 }
 
 // UpdateUser handles PUT /api/users/:id
 func (uc *UserController) UpdateUser(c *gin.Context) {
-	
+
 }
 
 // DeleteUser handles DELETE /api/users/:id
 func (uc *UserController) DeleteUser(c *gin.Context) {
-	
+
 }
