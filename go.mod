@@ -49,6 +49,7 @@ require (
 	github.com/quic-go/quic-go v0.54.0 // indirect
 	github.com/redis/go-redis/v9 v9.14.0
 	github.com/robfig/cron/v3 v3.0.1
+	github.com/satori/go.uuid v1.2.0
 	github.com/spf13/viper v1.21.0
 	github.com/stripe/stripe-go/v76 v76.25.0
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect

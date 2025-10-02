@@ -8,17 +8,17 @@ import (
 
 // User represents a user record in the database.
 type User struct {
-	ID        uint           `gorm:"primaryKey" json:"id"`
-	Username  string         `gorm:"size:50;uniqueIndex;not null" json:"username"`
-	Email     string         `gorm:"size:100;uniqueIndex;not null" json:"email"`
-	Password  string         `gorm:"size:255;not null" json:"-"` // - means don't include in JSON
-	FullName  string         `gorm:"size:100" json:"full_name,omitempty"`
-	IsActive  bool           `gorm:"default:true" json:"is_active"`
-	IsAdmin   bool           `gorm:"default:false" json:"is_admin"` // Admin flag
-	LastLogin *time.Time     `json:"last_login,omitempty"`
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
-	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"` // Soft delete
+	ID        string         `json:"id" gorm:"column:id;primaryKey;type:varchar(255);comment:'Primary Key'"`
+	Username  string         `json:"username" gorm:"column:username;type:varchar(50);comment:'username to login'"`
+	Email     string         `json:"email" gorm:"column:email;type:varchar(100);comment:'email to login'"`
+	Password  string         `json:"password" gorm:"column:password;type:varchar(255);comment:'password to login'"`
+	FullName  string         `json:"full_name" gorm:"column:full_name;type:varchar(100);comment:'full name'"`
+	IsActive  bool           `json:"is_active" gorm:"column:is_active;type:boolean;comment:'is active'"`
+	IsAdmin   bool           `json:"is_admin" gorm:"column:is_admin;type:boolean;comment:'is admin'"`
+	LastLogin *time.Time     `json:"last_login" gorm:"column:last_login;type:timestamp;comment:'last login'"`
+	CreatedAt time.Time      `json:"created_at" gorm:"column:created_at;type:timestamp;comment:'created at'"`
+	UpdatedAt time.Time      `json:"updated_at" gorm:"column:updated_at;type:timestamp;comment:'updated at'"`
+	DeletedAt gorm.DeletedAt `json:"deleted_at" gorm:"column:deleted_at;type:timestamp;comment:'deleted at'"`
 }
 
 // TableName specifies the table name for the User model

@@ -12,7 +12,7 @@ import (
 	"backend-ecommerce/internal/application/entity"
 )
 
-var db *gorm.DB
+var _db *gorm.DB
 
 // Init initializes the global GORM DB connection and runs migrations.
 // Database connection is optional and will log a warning if it fails.
@@ -38,7 +38,7 @@ func Init() {
 	)
 
 	var err error
-	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
+	_db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),
 	})
 	if err != nil {
@@ -48,24 +48,15 @@ func Init() {
 	}
 
 	// Auto-migrate all models if database is connected
-	err = db.AutoMigrate(
+	err = _db.AutoMigrate(
 		&entity.User{},
-		// Add other models here
 	)
 	if err != nil {
 	}
 	log.Println("dbmanager: connected and migrated")
 }
 
-// DB returns the initialized *gorm.DB.
-func DB() *gorm.DB {
-	return db
-}
-
 // GetDB is an alias for DB() to maintain backward compatibility
-func GetDB() (*gorm.DB, error) {
-	if db == nil {
-		return nil, fmt.Errorf("database not initialized")
-	}
-	return db, nil
+func GetDB() *gorm.DB {
+	return _db
 }

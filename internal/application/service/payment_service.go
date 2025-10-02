@@ -2,17 +2,17 @@ package service
 
 import (
 	"backend-ecommerce/internal/application/entity"
-	"backend-ecommerce/internal/infrastructure/stripe"
+	// "backend-ecommerce/internal/infrastructure/stripe"
 )
 
 type paymentService struct {
-	stripeClient *stripe.StripeManager
+	// stripeClient *stripe.StripeManager
 }
 
 
 // ProcessPayment processes a payment using Stripe
 func (s *paymentService) ProcessPayment(payment entity.Payment) (*entity.Payment, error) {
-
+	return nil, nil
 }
 
 // GetPaymentByID retrieves a payment by its ID
@@ -40,20 +40,20 @@ func (s *paymentService) HandleWebhook(payload []byte, signature string) error {
 	return nil
 }
 
-// handlePaymentIntentSucceeded handles successful payment intents
-func (s *paymentService) handlePaymentIntentSucceeded(event stripe.Event) error {
-	return nil
-}
+// // handlePaymentIntentSucceeded handles successful payment intents
+// func (s *paymentService) handlePaymentIntentSucceeded(event stripe.Event) error {
+// 	return nil
+// }
 
-// handlePaymentIntentFailed handles failed payment intents
-func (s *paymentService) handlePaymentIntentFailed(event stripe.Event) error {
-	return nil
-}
+// // handlePaymentIntentFailed handles failed payment intents
+// func (s *paymentService) handlePaymentIntentFailed(event stripe.Event) error {
+// 	return nil
+// }
 
-// handleChargeRefunded handles refund events
-func (s *paymentService) handleChargeRefunded(event stripe.Event) error {
-	return nil
-}
+// // handleChargeRefunded handles refund events
+// func (s *paymentService) handleChargeRefunded(event stripe.Event) error {
+// 	return nil
+// }
 
 // ConvertToStripeAmount converts a float amount to Stripe's smallest currency unit (e.g., cents)
 func (s *paymentService) ConvertToStripeAmount(amount float64, currency string) (int64, error) {

@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 
 	"backend-ecommerce/internal/application/router"
 	"backend-ecommerce/internal/infrastructure/cachemanager"
@@ -28,10 +27,8 @@ func main() {
 	r.Use(config.CORSMiddleware())
 
 	// Get database connection
-	db, err := dbmanager.GetDB()
-	if err != nil {
-		log.Fatalf("Failed to connect to database: %v", err)
-	}
+	db := dbmanager.GetDB()
+
 
 	// Initialize JWT
 	config.InitJWT()
