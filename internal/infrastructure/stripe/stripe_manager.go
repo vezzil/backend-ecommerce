@@ -1,11 +1,14 @@
 package stripe
 
 import (
+	"fmt"
 	"sync"
 
 	"github.com/stripe/stripe-go/v76"
 	"github.com/stripe/stripe-go/v76/checkout/session"
 	"github.com/stripe/stripe-go/v76/paymentintent"
+	"github.com/stripe/stripe-go/v76/refund"
+	"github.com/stripe/stripe-go/v76/webhook"
 )
 
 // StripeManager handles Stripe payment operations
@@ -97,5 +100,10 @@ func (sm *StripeManager) CreateRefund(paymentIntentID string, amount int64) (*st
 		params.Amount = stripe.Int64(amount)
 	}
 
-	return refund.New(params)
+	refund, err := refund.New(params)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create refund: %w", err)
+	}
+
+	return refund, nil
 }
