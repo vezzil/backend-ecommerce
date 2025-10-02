@@ -9,7 +9,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 
-	"backend-ecommerce/internal/auth/jwtmanager"
+	"backend-ecommerce/internal/infrastructure/jwtmanager"
 )
 
 // JWTConfig holds the JWT configuration

@@ -1,53 +1,15 @@
 package service
 
 import (
+	"backend-ecommerce/internal/application/dto"
 	"backend-ecommerce/internal/application/entity"
-	"backend-ecommerce/internal/application/repository"
 )
 
 type cartService struct {
-	repo repository.CartRepository
 }
 
-// NewCartService creates a new cart service
-func NewCartService(repo repository.CartRepository) CartService {
-	return &cartService{
-		repo: repo,
-	}
-}
+func (s *cartService) GetOrCreateCart(userID *string, guestToken string) dto.ResponseDto {
 
-func (s *cartService) GetOrCreateCart(userID *string, guestToken string) (*entity.Cart, error) {
-	var cart *entity.Cart
-	var err error
-
-	// If user is authenticated, try to get their cart
-	if userID != nil && *userID != "" {
-		cart, err = s.repo.FindByUserID(*userID)
-		if err == nil && cart != nil {
-			return cart, nil
-		}
-
-		// If no cart found for user, create a new one
-		cart = &entity.Cart{
-			UserID: userID,
-		}
-	} else if guestToken != "" {
-		// Try to get guest cart
-		cart, err = s.repo.FindByGuestToken(guestToken)
-		if err == nil && cart != nil {
-			return cart, nil
-		}
-
-		// If no cart found for guest, create a new one
-		cart = &entity.Cart{
-			GuestToken: &guestToken,
-		}
-	} else {
-		// Create a new guest cart
-		cart = &entity.Cart{}
-	}
-
-	return s.repo.Create(*cart)
 }
 
 func (s *cartService) GetCartByID(id string) (*entity.Cart, error) {

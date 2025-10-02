@@ -7,18 +7,10 @@ import (
 	"gorm.io/gorm"
 
 	"backend-ecommerce/internal/application/entity"
-	"backend-ecommerce/internal/infrastructure/dbmanager"
 )
 
 type userService struct {
 	db *gorm.DB
-}
-
-// NewUserService creates a new instance of UserService
-func NewUserService() UserService {
-	return &userService{
-		db: dbmanager.DB(),
-	}
 }
 
 // GetAllUsers returns a paginated list of users

@@ -9,7 +9,6 @@ import (
 	"backend-ecommerce/internal/application/dto"
 	"backend-ecommerce/internal/application/entity"
 	"backend-ecommerce/internal/application/service"
-	"backend-ecommerce/pkg/response"
 )
 
 // CategoryController handles category-related HTTP requests

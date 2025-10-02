@@ -1,57 +1,28 @@
 package controller
 
 import (
+	"backend-ecommerce/internal/application/service"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-
-	"backend-ecommerce/internal/application/entity"
-	"backend-ecommerce/internal/application/service"
-	"backend-ecommerce/pkg/response"
 )
 
 // CartController handles cart-related HTTP requests
 type CartController struct {
-	cartService service.CartService
-}
-
-// NewCartController creates a new cart controller
-func NewCartController(cartService service.CartService) *CartController {
-	return &CartController{
-		cartService: cartService,
-	}
-}
-
-// RegisterRoutes registers cart routes
-func (cc *CartController) RegisterRoutes(router *gin.RouterGroup) {
-	cartGroup := router.Group("/carts")
-	{
-		cartGroup.GET("", cc.GetOrCreateCart)
-		cartGroup.POST("/items", cc.AddCartItem)
-		cartGroup.PUT("/items/:item_id", cc.UpdateCartItem)
-		cartGroup.DELETE("/items/:item_id", cc.RemoveCartItem)
-		cartGroup.DELETE("", cc.ClearCart)
-	}
 }
 
 // GetOrCreateCart handles GET /api/carts
 func (cc *CartController) GetOrCreateCart(c *gin.Context) {
-	// In a real app, you'd get the user ID from the auth context
-	var userID *string
-	// userID := c.GetString("user_id") // Uncomment when auth is implemented
-	// if userID != "" {
-	// 	userIDPtr = &userID
-	// }
-
-	guestToken := c.DefaultQuery("guest_token", "")
-
-	cart, err := cc.cartService.GetOrCreateCart(userID, guestToken)
-	if err != nil {
-		response.Error(c, http.StatusInternalServerError, "Failed to get or create cart: "+err.Error())
+	userID := c.GetString("user_id")
+	
+	if userID == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
 		return
 	}
 
-	response.Success(c, cart)
+	response := service.ICartService.GetOrCreateCart(userID, guestToken)
+
+	c.JSON(http.StatusOK, response)
 }
 
 // AddCartItem handles POST /api/carts/items
