@@ -54,9 +54,6 @@ type AppConfig struct {
 		Level string
 		File  string
 	}
-	CORS struct {
-		AllowedOrigins []string
-	}
 }
 
 var cfg AppConfig
