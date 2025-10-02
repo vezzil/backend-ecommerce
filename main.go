@@ -9,7 +9,7 @@ import (
 	"backend-ecommerce/internal/infrastructure/config"
 	"backend-ecommerce/internal/infrastructure/cronmanager"
 	"backend-ecommerce/internal/infrastructure/dbmanager"
-	"backend-ecommerce/internal/server/httpserver"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -21,8 +21,11 @@ func main() {
 	cachemanager.Init()
 	cronmanager.Init()
 
-	// Create HTTP server (gin.Engine)
-	r := httpserver.New()
+	// Create Gin router with default middleware
+	r := gin.Default()
+
+	// Apply CORS middleware from router_config
+	r.Use(config.CORSMiddleware())
 
 	// Get database connection
 	db, err := dbmanager.GetDB()
