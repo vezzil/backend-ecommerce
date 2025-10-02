@@ -182,10 +182,11 @@ func (s *userService) UpdateUser(id ,username, email, password, fullName string)
 	}
 	
 	if err := db.Save(&user).Error; err != nil {
+		logger.Error("Error updating user: %v", err)
 		return *dto.Fail("Error updating user")
 	}
 	
-	return *dto.Fail("Not implemented yet")
+	return *dto.Success("User updated successfully")
 }
 
 // SoftDeleteUser soft deletes a user by their ID
@@ -194,6 +195,7 @@ func (s *userService) SoftDeleteUser(id string) dto.ResponseDto {
 	
 	var user entity.User
 	if err := db.First(&user, id).Error; err != nil {
+		logger.Error("Error soft deleting user: %v", err)
 		return *dto.Fail("User not found")
 	}
 	
@@ -202,8 +204,9 @@ func (s *userService) SoftDeleteUser(id string) dto.ResponseDto {
 		Time:  time.Now().UTC(),
 		Valid: true,
 	}
-	
+
 	if err := db.Save(&user).Error; err != nil {
+		logger.Error("Error soft deleting user: %v", err)
 		return *dto.Fail("Error soft deleting user")
 	}
 	
