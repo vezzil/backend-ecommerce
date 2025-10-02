@@ -69,3 +69,4 @@ func Register(r *gin.Engine, db *gorm.DB) {
 		paymentController.RegisterRoutes(protectedAPI)
 		productReviewController.RegisterRoutes(protectedAPI)
 	}
+}

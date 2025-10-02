@@ -1,10 +1,6 @@
 package dto
 
-// LoginRequest represents the login request payload
-type LoginRequest struct {
-	Email    string `json:"email" binding:"required,email"`
-	Password string `json:"password" binding:"required,min=8"`
-}
+
 
 // RegisterRequest represents the registration request payload
 type RegisterRequest struct {

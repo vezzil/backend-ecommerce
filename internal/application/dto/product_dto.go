@@ -37,7 +37,7 @@ type ProductResponse struct {
 	IsActive     bool               `json:"is_active"`
 	Category     *CategoryResponse  `json:"category,omitempty"`
 	Images       []ProductImageResponse `json:"images,omitempty"`
-	Inventory    *InventoryResponse `json:"inventory,omitempty"`
+	// Inventory    *InventoryResponse `json:"inventory,omitempty"`
 	CreatedAt    string             `json:"created_at"`
 	UpdatedAt    string             `json:"updated_at"`
 }
