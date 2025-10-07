@@ -23,7 +23,7 @@ type Product struct {
 	// Relations
 	Category     *Category      `json:"category,omitempty" gorm:"foreignKey:CategoryID"`
 	Images       []ProductImage `json:"images,omitempty" gorm:"foreignKey:ProductID"`
-	Inventory    *Inventory     `json:"inventory,omitempty" gorm:"foreignKey:ProductID"`
+	// Inventory    *Inventory     `json:"inventory,omitempty" gorm:"foreignKey:ProductID"`
 }
 
 // TableName specifies the table name for the Product model
