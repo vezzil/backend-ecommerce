@@ -21,7 +21,7 @@ type Product struct {
 	UpdatedAt    time.Time      `json:"updated_at" gorm:"autoUpdateTime;column:updated_at;comment:'Updated at'"`
 	
 	// Relations
-	Category     *Category      `json:"category,omitempty" gorm:"foreignKey:CategoryID"`
+	// Category     *Category      `json:"category,omitempty" gorm:"foreignKey:CategoryID"`
 	Images       []ProductImage `json:"images,omitempty" gorm:"foreignKey:ProductID"`
 	// Inventory    *Inventory     `json:"inventory,omitempty" gorm:"foreignKey:ProductID"`
 }
