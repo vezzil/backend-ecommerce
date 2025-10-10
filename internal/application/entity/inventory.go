@@ -15,7 +15,7 @@ type Inventory struct {
 	UpdatedAt     time.Time `json:"updated_at" gorm:"autoUpdateTime;column:updated_at;comment:'Updated at'"`
 	
 	// Available calculates available stock (quantity - reserved)
-	Available     int       `json:"available" gorm:"-"`
+	// Available     int       `json:"available" gorm:"-"`
 }
 
 // TableName specifies the table name for the Inventory model
