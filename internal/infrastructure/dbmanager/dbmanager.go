@@ -8,8 +8,8 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 
-	"backend-ecommerce/internal/infrastructure/config"
 	"backend-ecommerce/internal/application/entity"
+	"backend-ecommerce/internal/infrastructure/config"
 )
 
 var _db *gorm.DB
